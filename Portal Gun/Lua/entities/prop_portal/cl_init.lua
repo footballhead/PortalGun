@@ -130,10 +130,10 @@ function ENT:Think()
 	   -- end
 end
 
-local nonlinkedblue = surface.GetTextureID( "sprites/noblue" )
-local nonlinkedorange = surface.GetTextureID( "sprites/nored" )
-local bluebordermat = surface.GetTextureID( "sprites/blborder" )
-local orangebordermat = surface.GetTextureID( "sprites/ogborder" )
+local nonlinkedblue = surface.GetTextureID( "sprites/circular/n0blue" )
+local nonlinkedorange = surface.GetTextureID( "sprites/circular/n0red" )
+local bluebordermat = surface.GetTextureID( "sprites/circular/blueborder" )
+local orangebordermat = surface.GetTextureID( "sprites/circular/redborder" )
 local bluebetabordermat = surface.GetTextureID( "sprites/blueborder" )
 local orangebetabordermat = surface.GetTextureID( "sprites/redborder" )
 local nonlinkedbluebeta = surface.GetTextureID( "sprites/n0blue" )
@@ -162,6 +162,7 @@ function ENT:DrawPortalEffects( portaltype )
        
         local origin = self:GetRenderOrigin() + ( self:GetForward() * 0.1 ) - ( self:GetUp() * height / -2 ) - ( self:GetRight() * width / -2 )
        
+	    -- First, draw the closed texture.
         cam.Start3D2D( origin, ang, res )
        
                 surface.SetDrawColor( 255, 255, 255, 255 )
@@ -193,9 +194,24 @@ function ENT:DrawPortalEffects( portaltype )
                         end
 						end
                        
-                        surface.DrawTexturedRect( 0, 0, width / res , height / res )
+                        surface.DrawTexturedRect( width / res / 6, 0, width / res / 1.5 , height / res )
                        
                 end
+				
+			cam.End3D2D()
+			
+			-- Second, draw the border texture.
+			-- This is separate because we don't want to factor in self.openpercent.
+			-- (This is how Portal does it)
+			width = 105
+			height = 114	   
+			if betabordersenabled:GetBool() then
+					height = 112
+			end
+			
+			origin = self:GetRenderOrigin() + ( self:GetForward() * 0.1 ) - ( self:GetUp() * height / -2 ) - ( self:GetRight() * width / -2 )
+			
+			cam.Start3D2D( origin, ang, res )
 				
                 if bordersenabled:GetBool() == true then
                         if portaltype == TYPE_BLUE then
@@ -210,7 +226,7 @@ function ENT:DrawPortalEffects( portaltype )
                                        
                                 end
                                
-                                surface.DrawTexturedRect( 0, 0, width / res , height / res )
+                                surface.DrawTexturedRect( width / res / 6, 0, width / res / 1.5 , height / res )
                                
                         elseif portaltype == TYPE_ORANGE then
                                
@@ -224,7 +240,7 @@ function ENT:DrawPortalEffects( portaltype )
                                        
                                 end
                                
-                                surface.DrawTexturedRect( 0, 0, width / res , height / res )
+                                surface.DrawTexturedRect( width / res / 6, 0, width / res / 1.5 , height / res )
                                
                         end
                        
