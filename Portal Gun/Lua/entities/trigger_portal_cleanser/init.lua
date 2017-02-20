@@ -28,7 +28,10 @@ function ENT:StartTouch( ent )
 			end
 			ent:Remove()
 			
-		else 
+		else
+			-- ignore combine balls (a puzzle element)
+			if ent:GetClass() == "prop_combine_ball" then return end
+			
 			if ent:GetName() != "dissolveme" then
 			
 				local vel = ent:GetVelocity()
